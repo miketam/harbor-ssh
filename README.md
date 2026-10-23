@@ -1,10 +1,66 @@
 # Harbor SSH
 
+简体中文 | [English](README.en.md)
+
 Harbor SSH 是基于 Electron、React、TypeScript、ssh2 和 xterm.js 的本地 SSH 桌面客户端，提供多标签终端、加密身份库、SFTP 文件传输、本地端口转发和单跳跳板机。无需云端账号或 API Key。
 
 当前源码版本为 **0.4.2**。主要开发与验证平台为 macOS；Windows 已提供构建脚本，仍需实机验收。应用在自己的目录存储数据，不读取、导入或修改其他 SSH 客户端的数据。
 
-## 快速开始
+## 下载与安装
+
+[最新 Release](https://github.com/miketam/harbor-ssh/releases/latest) · [v0.4.2 发布说明](https://github.com/miketam/harbor-ssh/releases/tag/v0.4.2) · [SHA256SUMS](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/SHA256SUMS)
+
+下表为 v0.4.2 的固定下载链接；后续版本请查看最新 Release。
+
+| 设备 | 推荐下载 | 备用下载 |
+|---|---|---|
+| 苹果 M 系列 Mac（Apple Silicon） | [arm64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-arm64.dmg) | [arm64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-arm64.zip) |
+| Intel Mac | [x64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-x64.dmg) | [x64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-x64.zip) |
+| Windows x64（Intel / AMD） | [EXE 安装程序](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-win-x64-setup.exe) | 暂无 Windows ARM64 原生安装包 |
+
+Mac 可在苹果菜单的「关于本机」查看芯片：Apple M 系列选 arm64，Intel 处理器选 x64。Mac 包要求 macOS 13 或更新版本。Windows 可在「设置 → 系统 → 系统信息」查看系统类型。
+
+- **Mac**：打开 DMG，将 Harbor SSH.app 拖到 Applications（应用程序），再从应用程序启动。ZIP 用户先解压，再将应用移入 Applications。
+- **Windows**：运行 EXE，选择当前用户有写入权限的专用安装目录，再从开始菜单启动。详细升级和卸载行为见下文「Windows x64」。
+- **升级**：退出旧版并备份应用数据，再安装新版。备份和兼容边界见 [PACKAGING.md](PACKAGING.md)。使用安装包无需安装 Node.js。
+
+### 下载校验
+
+同时下载 `SHA256SUMS`，计算所选安装包的 SHA-256，与其中同名文件的一行对照。
+
+macOS（Intel 用户将文件名中的 arm64 改为 x64）：
+
+```bash
+shasum -a 256 harbor-ssh-0.4.2-mac-arm64.dmg
+```
+
+Windows PowerShell：
+
+```powershell
+Get-FileHash .\harbor-ssh-0.4.2-win-x64-setup.exe -Algorithm SHA256
+```
+
+摘要一致只确认文件与发布附件一致，不代表已经通过系统安全认证。
+
+### macOS 安全提示
+
+当前 Mac 包采用 ad-hoc 签名，未获得 Apple 公证，首次打开可能提示无法验证开发者。确认文件来自本仓库 Release、校验和一致且你愿意运行后：
+
+1. 将应用移到 Applications，尝试打开一次并关闭提示。
+2. 打开「系统设置 → 隐私与安全性」，找到 Harbor SSH 被阻止的提示。
+3. 点击「仍要打开」，按系统要求认证并再次确认打开。
+
+若提示「会损坏你的电脑」、检测到恶意软件或校验和不一致，请停止运行；若提示应用损坏，先重新下载并校验。没有「仍要打开」选项时，查看系统或组织管理限制。不要关闭 Gatekeeper 或 SIP，也不要批量清除下载文件的隔离标记。参见 [Apple 官方说明](https://support.apple.com/102445)。
+
+### Windows 安全提示
+
+当前 Windows 安装包未签名，可能显示未知发布者或「Windows 已保护你的电脑」。只有确认下载来源、校验和及文件名后，才在普通 SmartScreen 未识别应用提示中选择「更多信息 → 仍要运行」（如果系统提供该选项）。
+
+若 Defender 报告恶意软件，或 Smart App Control / 组织策略禁止运行，请停止安装并联系管理员；不要关闭防病毒软件或全局安全防护。Smart App Control 不提供单个应用的绕过选项。参见 [Microsoft SmartScreen 说明](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation)和 [Smart App Control FAQ](https://support.microsoft.com/en-us/windows/security/threat-malware-protection/smart-app-control-frequently-asked-questions)。
+
+Windows 安装、卸载和运行仍待实机验收。Intel 包已在 Apple Silicon 兼容层通过 SSH/界面测试，仍待 Intel 真机验收。
+
+## 从源码启动
 
 下载项目源码并进入项目根目录后执行：
 
@@ -23,13 +79,9 @@ npm run dev
 - 单跳跳板机、SFTP 上传下载及本地端口转发。
 - 六种终端主题、可折叠主机栏和重启后恢复断开的标签。
 
-## 安装与升级
-
-安装包位于 `release/harbor-ssh-0.4.2-mac-arm64.dmg`，打开后将 Harbor SSH.app 拖入 Applications。Apple Silicon 请选择 arm64，Intel Mac 请选择 x64。Mac 包适用于 macOS 13+，采用本地 ad-hoc 签名，未做 Apple 公证。安装、备份、升级兼容和签名配置见 [PACKAGING.md](PACKAGING.md)。
-
 ## 启动
 
-如果第一批应用还开着，请先正常退出旧窗口中的应用，再运行：
+请先退出正在运行的旧版应用，再运行：
 
 ```bash
 cd harbor-ssh
