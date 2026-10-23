@@ -1,5 +1,5 @@
 import { packager } from '@electron/packager';
-import { listPackage } from '@electron/asar';
+import { listPackage, extractFile } from '@electron/asar';
 import { mkdirSync, readFileSync, writeFileSync, statSync, readdirSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -12,6 +12,7 @@ const basename = `harbor-ssh-${pkg.version}-win-x64`;
 mkdirSync(release, { recursive: true });
 const [output] = await packager({
   dir: root, out: release, name: 'Harbor SSH', executableName: 'Harbor SSH',
+  extraResource: [join(root, "LICENSE"), join(root, "THIRD_PARTY_NOTICES.md"), join(root, "node_modules/electron/dist/LICENSES.chromium.html")],
   platform: 'win32', arch: 'x64', electronVersion: pkg.devDependencies.electron,
   win32metadata: { CompanyName: 'Harbor SSH', ProductName: 'Harbor SSH' },
   appVersion: pkg.version, overwrite: true, prune: true,
@@ -23,6 +24,9 @@ const [output] = await packager({
     || /\/node_modules\/(?:cpu-features|ssh2)\/.*\.(?:node|o|a)$/.test(name),
 });
 const entries = listPackage(join(output, 'resources/app.asar'));
+for (const file of ['LICENSE', 'THIRD_PARTY_NOTICES.md']) {
+  if (!extractFile(join(output, 'resources/app.asar'), file).equals(readFileSync(join(root, file)))) throw new Error(`许可证缺失或不一致：${file}`);
+}
 if (entries.some(file => /^\/(?:tests|scripts|src|test-artifacts|release|\.env)(?:\/|$)/.test(file)
   || /^\/node_modules\/(?:electron|playwright|typescript|@electron\/packager)(?:\/|$)/.test(file))) throw new Error('安装包包含非运行时资料');
 const native = readFileSync(join(output, 'resources/app.asar.unpacked/node_modules/better-sqlite3/prebuilds/win32-x64.node'));

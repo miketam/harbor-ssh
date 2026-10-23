@@ -25,7 +25,7 @@ npm run dev
 
 ## 安装与升级
 
-安装包位于 `release/harbor-ssh-0.4.1-mac-arm64.dmg`，打开后将 Harbor SSH.app 拖入 Applications。本次产物为 Apple Silicon、macOS 13+ 的本地 ad-hoc 签名包，未做 Apple 公证。安装、备份、升级兼容和签名配置见 [PACKAGING.md](PACKAGING.md)。
+安装包位于 `release/harbor-ssh-0.4.2-mac-arm64.dmg`，打开后将 Harbor SSH.app 拖入 Applications。Apple Silicon 请选择 arm64，Intel Mac 请选择 x64。Mac 包适用于 macOS 13+，采用本地 ad-hoc 签名，未做 Apple 公证。安装、备份、升级兼容和签名配置见 [PACKAGING.md](PACKAGING.md)。
 
 ## 启动
 
@@ -116,6 +116,7 @@ macOS 数据目录为 `~/Library/Application Support/Harbor SSH`，开发版和�
 
 ```bash
 npm run package:mac          # 当前 Mac 架构 DMG、ZIP、签名验证、校验和
+# Intel 交叉构建：HARBOR_MAC_ARCH=x64 npm run package:mac
 npm run test:upgrade         # 重新打包并跑真实 0.3 基线到安装版升级验证
 npm run typecheck
 npm test                   # 存储、迁移、加密和 SSH 协议测试

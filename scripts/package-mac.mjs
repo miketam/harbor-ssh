@@ -1,5 +1,5 @@
 import { packager } from '@electron/packager';
-import { listPackage } from '@electron/asar';
+import { listPackage, extractFile } from '@electron/asar';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, symlinkSync, rmSync, readdirSync, statSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -8,8 +8,8 @@ import { createHash } from 'node:crypto';
 if (process.platform !== 'darwin') throw new Error('macOS 安装包须在 Mac 上构建');
 const root = resolve(import.meta.dirname, '..');
 const pkg = JSON.parse(readFileSync(join(root, 'package.json')));
-const arch = process.arch;
-if (!['arm64', 'x64'].includes(arch)) throw new Error('只支持当前 Mac 架构构建');
+const arch = process.env.HARBOR_MAC_ARCH || process.arch;
+if (!['arm64', 'x64'].includes(arch)) throw new Error('Mac 架构必须为 arm64 或 x64');
 const release = join(root, 'release'); mkdirSync(release, { recursive: true });
 const work = mkdtempSync(join(release, '.package-'));
 const run = (binary, args) => execFileSync(binary, args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 300000 });
@@ -28,9 +28,11 @@ try {
   const [output] = await packager({
     dir: root, out: release, name: 'Harbor SSH', executableName: 'Harbor SSH',
     appBundleId: bundleId, helperBundleId: `${bundleId}.helper`, appCategoryType: 'public.app-category.developer-tools',
+    extraResource: [join(root, "LICENSE"), join(root, "THIRD_PARTY_NOTICES.md"), join(root, "node_modules/electron/dist/LICENSES.chromium.html")],
     platform: 'darwin', arch, electronVersion: pkg.devDependencies.electron, appVersion: pkg.version, buildVersion: pkg.version,
     icon, overwrite: true, prune: true, asar: { unpack: '**/*.{node,dylib}' },
-    ignore: name => (!!name && !/^\/(?:dist(?:\/|$)|dist-electron(?:\/|$)|node_modules(?:\/|$)|package\.json$|LICENSE$|THIRD_PARTY_NOTICES\.md$)/.test(name)) || /\/node_modules\/better-sqlite3\/(?:src|deps|build)(?:\/|$)/.test(name) || (name.includes('/better-sqlite3/prebuilds/') && name.endsWith('.node') && !name.endsWith(`/darwin-${arch}.node`)),
+    // Use ssh2 JavaScript fallback to avoid host-architecture optional addons.
+    ignore: name => /\/node_modules\/(?:cpu-features|ssh2)\/.*\.(?:node|o|a)$/.test(name) || (!!name && !/^\/(?:dist(?:\/|$)|dist-electron(?:\/|$)|node_modules(?:\/|$)|package\.json$|LICENSE$|THIRD_PARTY_NOTICES\.md$)/.test(name)) || /\/node_modules\/better-sqlite3\/(?:src|deps|build)(?:\/|$)/.test(name) || (name.includes('/better-sqlite3/prebuilds/') && name.endsWith('.node') && !name.endsWith(`/darwin-${arch}.node`)),
     osxSign: { identity, identityValidation: identity !== '-', gatekeeperAssess: false, preAutoEntitlements: false, preEmbedProvisioningProfile: false,
       // Ad-hoc builds have no Team ID; explicitly clear inherited runtime flags.
       optionsForFile: () => ({ entitlements: join(root, 'packaging/entitlements.plist'), hardenedRuntime: identity !== '-', ...(identity === '-' ? { signatureFlags: '0' } : {}) })
@@ -40,6 +42,9 @@ try {
   run('codesign', ['--verify', '--deep', '--strict', '--verbose=2', app]);
   const archive = join(app, 'Contents/Resources/app.asar');
   const entries = listPackage(archive);
+  for (const file of ['LICENSE', 'THIRD_PARTY_NOTICES.md']) {
+    if (!extractFile(archive, file).equals(readFileSync(join(root, file)))) throw new Error(`许可证缺失或不一致：${file}`);
+  }
   if (entries.some(file => /^\/(?:test-artifacts|tests|scripts|src|evidence|release|\.env)(?:\/|$)/.test(file))) throw new Error('安装包包含非运行时资料');
   if (entries.some(file => /^\/node_modules\/(?:playwright|electron|typescript|@electron\/packager)(?:\/|$)/.test(file))) throw new Error('安装包包含开发依赖');
   const nativeDirectory = join(app, 'Contents/Resources/app.asar.unpacked/node_modules/better-sqlite3/prebuilds');
@@ -55,8 +60,8 @@ try {
   run('hdiutil', ['create', '-volname', 'Harbor SSH', '-srcfolder', stage, '-ov', '-format', 'UDZO', dmg]);
   run('hdiutil', ['verify', dmg]);
   const artifacts = [dmg, zip].map(path => ({ file: path.split('/').pop(), sha256: hash(path), bytes: statSync(path).size }));
-  writeFileSync(join(release, 'SHA256SUMS'), artifacts.map(a => `${a.sha256}  ${a.file}`).join('\n')+'\n');
+  writeFileSync(join(release, `${basename}-SHA256SUMS`), artifacts.map(a => `${a.sha256}  ${a.file}`).join('\n')+'\n');
   const manifest = { version: pkg.version, platform: 'darwin', arch, electron: pkg.devDependencies.electron, bundleId, signing: identity === '-' ? 'ad-hoc' : 'developer-id', notarized: false, app, minimumMacOS: run('/usr/libexec/PlistBuddy', ['-c', 'Print :LSMinimumSystemVersion', join(app,'Contents/Info.plist')]).trim(), asarSha256: hash(archive), nativeModules, artifacts };
-  writeFileSync(join(release, 'manifest.json'), JSON.stringify(manifest, null, 2)+'\n');
+  writeFileSync(join(release, `${basename}-manifest.json`), JSON.stringify(manifest, null, 2)+'\n');
   console.log(JSON.stringify(manifest, null, 2));
 } finally { rmSync(work, { recursive: true, force: true }); }

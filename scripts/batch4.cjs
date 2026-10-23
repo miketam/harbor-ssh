@@ -10,7 +10,7 @@ const { serverFixture } = require('../tests/fixture.cjs');
 const Database = require('better-sqlite3');
 const root = resolve(__dirname, '..'), artifacts = join(root,'test-artifacts'), release = join(root,'release');
 mkdirSync(artifacts,{recursive:true});
-const manifest = JSON.parse(readFileSync(join(release,'manifest.json'),'utf8'));
+const manifest = JSON.parse(readFileSync(join(release,`harbor-ssh-${require('../package.json').version}-mac-${process.arch}-manifest.json`),'utf8'));
 const previous = process.env.HARBOR_PREVIOUS_APP || join(artifacts,'baseline-0.3.0');
 if (!existsSync(previous)) throw new Error('缺少真实 0.3.0 基线。请设置 HARBOR_PREVIOUS_APP 为旧版应用或保留的编译目录，不能用新版改版本号替代。');
 const profile = mkdtempSync(join(artifacts,'batch4-profile-')), install = mkdtempSync(join(artifacts,'batch4-install-')), mount = join(install,'mount');mkdirSync(mount);

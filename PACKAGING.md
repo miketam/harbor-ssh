@@ -2,7 +2,7 @@
 
 ## 当前交付
 
-`release/` 包含当前 Mac 架构的 DMG、ZIP、SHA256SUMS 和 manifest.json。本机产物为 arm64，应用声明最低 macOS 13。已执行本机安装启动与升级测试；Intel、其他 macOS 版本及另一台 Mac 尚未验证。
+`release/` 可分别生成 Mac arm64（Apple Silicon）和 x64（Intel）的 DMG、ZIP，以及各架构独立的校验和与 manifest。应用声明最低 macOS 13；跨架构打包不能替代 Intel 实机验证。
 
 当前没有可用的 Developer ID 证书，产物采用 ad-hoc 本地签名，未公证。`codesign --verify` 成功仅代表包内签名完整性，不代表通过下载分发的 Gatekeeper 检查。正式分发前需要 Apple Developer ID 签名、公证和独立机器验收。参见 [Electron 官方代码签名说明](https://www.electronjs.org/docs/latest/tutorial/code-signing)。
 
@@ -32,9 +32,10 @@
 
 ```bash
 npm ci
-npm run package:mac
-cd release
-shasum -a 256 -c SHA256SUMS
+HARBOR_MAC_ARCH=arm64 npm run package:mac
+HARBOR_MAC_ARCH=x64 npm run package:mac
+npm run package:win
+# 各构建顺序执行；在 release 中校验对应的 *-SHA256SUMS 文件。
 ```
 
 需要 macOS、Xcode Command Line Tools；普通运行不需要 Node。构建脚本自动生成图标、裁剪开发依赖、ASAR 打包并解包原生 addon，检查 SQLite 架构，验证签名和 DMG，生成 ZIP 和校验和。测试配置、源码、脚本、截图不进入安装包。
@@ -46,3 +47,5 @@ shasum -a 256 -c SHA256SUMS
 `npm run test:upgrade` 会重新打包，然后使用真实旧编译目录 `test-artifacts/baseline-0.3.0`，或 `HARBOR_PREVIOUS_APP` 指定的 0.3.0 应用。基线不能用新版改版本号伪造，测试缺少基线会失败。测试创建独立配置、虚构 SSH 凭据和本地服务器，挂载真实 DMG、安装到临时 Applications，并从该包启动。
 
 测试覆盖真实 0.3 数据保留、凭据复用、替换安装后重启、构造 v1/v2 数据库迁移、活动主机编辑及转发连接保持。实际包、原生 Keychain、数据库和 SSH 认证均执行真实代码。测试显式设置 Electron executablePath，跳过 Playwright 默认注入模拟 Keychain 的 loader；并断言该开关未启用。结果见 `test-artifacts/batch4-result.json`。
+
+发布包包含项目 MIT LICENSE 和 THIRD_PARTY_NOTICES.md，打包时逐字校验。Electron 自带的 LICENSE 与 LICENSES.chromium.html 也必须保留。

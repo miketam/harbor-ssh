@@ -30,6 +30,6 @@ ssh2、cpu-features、buildcheck 的锁文件缺少 license 字段，已读取�
 
 Electron 自身采用 MIT，并随运行时提供 Chromium 等组件的复合许可证声明。发布时须保留 Electron LICENSE 和 LICENSES.chromium.html，以及本项目 LICENSE、THIRD_PARTY_NOTICES.md；不得将全部依赖统称为 MIT。
 
-本次未重新生成 DMG、ZIP 或 EXE，也未对安装包中每个原生组件逐一做来源审计。现有安装包不会自动获得新声明，发布前应重新打包并检查最终内容。依赖升级后须重新核对。本报告是当前依赖和文件的工程检查记录。
+许可证初次核对未覆盖安装包重建；发布流程现已加入许可文件一致性检查，并将声明复制到应用资源目录。此检查不替代对每个原生组件的来源审计。依赖升级后须重新核对。本报告是当前依赖和文件的工程检查记录。
 
 参考：[MIT](https://opensource.org/license/mit)、[MPL FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/)、[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)。
