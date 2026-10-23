@@ -1,0 +1,46 @@
+{
+  "name": "harbor-ssh",
+  "productName": "Harbor SSH",
+  "version": "0.4.2",
+  "private": true,
+  "main": "dist-electron/electron/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.electron.json && vite build",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.electron.json --noEmit",
+    "start": "electron .",
+    "dev": "npm run build && electron .",
+    "test": "npm run build && node scripts/test.cjs",
+    "test:integration": "npm run build && node scripts/e2e.cjs",
+    "postinstall": "electron-rebuild -f --only better-sqlite3",
+    "test:openssh": "npm run build && node scripts/openssh.cjs && node scripts/openssh-batch2.cjs",
+    "test:batch2": "npm run build && node scripts/batch2.cjs",
+    "test:batch3": "npm run build && node scripts/batch3.cjs",
+    "package:mac": "npm run build && node scripts/package-mac.mjs",
+    "test:upgrade": "npm run package:mac && node scripts/batch4.cjs",
+    "package:win": "npm run build && node scripts/package-win.mjs",
+    "test:appearance": "npm run build && node scripts/appearance.cjs"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "0.11.0",
+    "@xterm/xterm": "6.0.0",
+    "better-sqlite3": "13.0.3",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "ssh2": "1.17.0"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "@electron/rebuild": "4.2.1",
+    "@types/better-sqlite3": "9.6.0",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/ssh2": "1.15.6",
+    "@vitejs/plugin-react": "6.1.2",
+    "electron": "45.0.0",
+    "playwright": "1.64.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  },
+  "license": "MIT"
+}

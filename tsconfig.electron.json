@@ -1,0 +1,1 @@
+{"compilerOptions":{"target":"ES2022","module":"Node16","moduleResolution":"Node16","strict":true,"skipLibCheck":true,"esModuleInterop":true,"outDir":"dist-electron","rootDir":".","types":["node"]},"include":["electron","shared.ts"]}

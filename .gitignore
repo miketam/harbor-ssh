@@ -1,0 +1,23 @@
+node_modules/
+dist/
+dist-electron/
+test-artifacts/
+*.sqlite*
+.DS_Store
+release/
+
+# Local credentials and private runtime state
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+vault-key.bin
+*.log
+
+# Local verification reports
+TEST_REPORT*.md
