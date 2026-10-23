@@ -6,6 +6,27 @@ Harbor SSH 是基于 Electron、React、TypeScript、ssh2 和 xterm.js 的本地
 
 当前源码版本为 **0.4.2**。主要开发与验证平台为 macOS；Windows 已提供构建脚本，仍需实机验收。应用在自己的目录存储数据，不读取、导入或修改其他 SSH 客户端的数据。
 
+## 界面预览
+
+以下为本地测试环境的真实截图，使用示例账号和文件，界面显示 v0.4.1。截图展示中文界面；当前发行版本请以下载区为准。
+
+**主机管理与 SSH 终端**：左侧选择主机，右侧操作终端，可切换主题。图中为 Dracula 主题。
+
+![Harbor SSH 主机列表与 Dracula 主题终端](docs/images/terminal-dracula.png)
+
+<details>
+<summary>查看更多：加密身份库与 SFTP 文件管理</summary>
+
+**加密身份库**：统一管理可复用的认证身份，列表显示保存状态，不展示密码明文。
+
+![Harbor SSH 加密身份库及示例身份](docs/images/identity-vault.png)
+
+**SFTP 文件管理**：连接后浏览远程目录、上传和下载文件，并查看传输状态。图中包含取消传输的测试记录。
+
+![Harbor SSH SFTP 远程文件列表和传输状态](docs/images/sftp-files.png)
+
+</details>
+
 ## 下载与安装
 
 [最新 Release](https://github.com/miketam/harbor-ssh/releases/latest) · [v0.4.2 发布说明](https://github.com/miketam/harbor-ssh/releases/tag/v0.4.2) · [SHA256SUMS](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/SHA256SUMS)

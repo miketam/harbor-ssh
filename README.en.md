@@ -6,6 +6,27 @@ Harbor SSH is a local SSH desktop client built with Electron, React, TypeScript,
 
 Current version: **0.4.2**. macOS is the primary development and validation platform. Windows packages are available, but Windows hardware validation is still pending. The application stores its own data and does not import or modify another SSH client's data.
 
+## Screenshots
+
+These are real screenshots from a local test environment with example accounts and files. The interface shows v0.4.1 and is in Chinese; see the download section for the current release version.
+
+**Hosts and SSH terminal:** select a host in the sidebar and work in the terminal. This screenshot uses the Dracula theme.
+
+![Harbor SSH host list and terminal using the Dracula theme](docs/images/terminal-dracula.png)
+
+<details>
+<summary>More screenshots: identity vault and SFTP</summary>
+
+**Encrypted identity vault:** manage reusable authentication identities and see their saved status without displaying plaintext passwords.
+
+![Harbor SSH encrypted identity vault with an example identity](docs/images/identity-vault.png)
+
+**SFTP file manager:** browse remote directories, upload or download files, and inspect transfer status. The screenshot includes cancelled test transfers.
+
+![Harbor SSH SFTP file browser and transfer status](docs/images/sftp-files.png)
+
+</details>
+
 ## Download and install
 
 [Latest release](https://github.com/miketam/harbor-ssh/releases/latest) · [v0.4.2 release notes](https://github.com/miketam/harbor-ssh/releases/tag/v0.4.2) · [SHA256SUMS](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/SHA256SUMS)
