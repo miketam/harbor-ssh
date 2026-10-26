@@ -1,3 +1,4 @@
+import { t, useLocale } from './i18n';
 import { useEffect, useRef } from 'react';
 import { Terminal as Xterm, type ITheme } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
@@ -5,6 +6,7 @@ import '@xterm/xterm/css/xterm.css';
 import type { SessionEvent } from '../shared';
 export interface TerminalHandle { write(event: Extract<SessionEvent, { type: 'data' }>): void; clear(): void; focus(): void; size(): { columns: number; rows: number } }
 export function TerminalView({ handle, getSessionId, theme }: { theme: ITheme; handle: React.RefObject<TerminalHandle | null>; getSessionId: () => string | null }) {
+  useLocale();
   const instance = useRef<Xterm | null>(null);
   const initialTheme = useRef(theme);
   const element = useRef<HTMLDivElement>(null);
@@ -31,5 +33,5 @@ export function TerminalView({ handle, getSessionId, theme }: { theme: ITheme; h
     return () => { observer.disconnect(); input.dispose(); clipboard.dispose(); terminal.dispose(); instance.current = null; handle.current = null; };
   }, [handle, getSessionId]);
   useEffect(() => { if (instance.current) instance.current.options.theme = theme; }, [theme]);
-  return <div className="terminal" ref={element} aria-label="SSH 交互终端" />;
+  return <div className="terminal" ref={element} aria-label={t("SSH 交互终端")} />;
 }

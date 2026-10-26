@@ -1,3 +1,4 @@
+import { translate, type Locale } from '../locales';
 import { app, BrowserWindow, ipcMain, Menu, utilityProcess, safeStorage, dialog, type UtilityProcess } from 'electron';
 import { mkdirSync, chmodSync, openSync, readSync, closeSync, writeFileSync, renameSync, rmSync, statSync } from 'node:fs';
 import { basename, join, resolve, dirname, posix } from 'node:path';
@@ -9,6 +10,8 @@ import { forwardInput, remotePath } from './resources';
 import { Identities } from './identities';
 import type { AuthCredentials, ConnectRequest, Host, SessionEvent, SshEvent, ResourceRequest, JumpConnection } from '../shared';
 
+let locale: Locale = 'zh-CN';
+const t = (message: string) => translate(message, locale);
 let window: BrowserWindow | undefined;
 let store: Store;
 let vault: Vault;
@@ -78,6 +81,11 @@ function rpc(current: RunningSession, request: ResourceRequest): Promise<any> {
   });
 }
 function setupIPC(): void {
+  handle('settings:locale', value => {
+    if (value !== 'zh-CN' && value !== 'en-US') throw new Error('Unsupported language');
+    locale = value;
+    updateMenu();
+  });
   handle('hosts:list', () => store.listHosts());
   handle('hosts:save', input => {
     return store.saveHost(input);
@@ -110,7 +118,7 @@ function setupIPC(): void {
   handle('identities:delete', id => store.deleteIdentity(id));
   handle('identities:import', async () => {
     if (!window) return null;
-    const chosen = await dialog.showOpenDialog(window, { title: '选择 SSH 私钥', properties: ['openFile'] });
+    const chosen = await dialog.showOpenDialog(window, { title: t('选择 SSH 私钥'), properties: ['openFile'] });
     if (chosen.canceled || !chosen.filePaths[0]) return null;
     let fd: number | undefined;
     let value: string;
@@ -153,7 +161,7 @@ function setupIPC(): void {
     if (sessions.size >= 10 || [...sessions.values()].some(session => session.tabId === request.tabId)) throw new Error('此标签已有连接或会话数已达上限');
     if (request.remember) {
       if (host.identityId && [...sessions.values()].some(s => s.host.identityId === host.identityId || s.jumpHost?.identityId === host.identityId)) throw new Error('请先断开使用此身份的其他会话再保存密码');
-      await identities.remember(host.id, resolved.auth);
+      await identities.remember(host.id, resolved.auth, t('身份'));
     }
     if (version !== rendererVersion || !window || window.isDestroyed()) throw new Error('连接请求已取消');
     if (sessions.size >= 10 || [...sessions.values()].some(session => session.tabId === request.tabId)) throw new Error('此标签已有连接或会话数已达上限');
@@ -237,7 +245,7 @@ function setupIPC(): void {
   handle('sftp:list', (id, path) => rpc(connected(id), { method: 'list', path: remotePath(path) }));
   handle('sftp:upload', async (id, directory) => {
     const current = connected(id); const remote = remotePath(directory);
-    const selection = await dialog.showOpenDialog(window!, { title: '选择要上传的文件', properties: ['openFile'] });
+    const selection = await dialog.showOpenDialog(window!, { title: t('选择要上传的文件'), properties: ['openFile'] });
     if (selection.canceled || !selection.filePaths[0]) return null;
     if (owned(id) !== current || !current.connected) throw new Error('原会话已结束');
     const localPath = selection.filePaths[0]; if (!statSync(localPath).isFile()) throw new Error('仅支持上传普通文件');
@@ -247,7 +255,7 @@ function setupIPC(): void {
   });
   handle('sftp:download', async (id, path) => {
     const current = connected(id); const remote = remotePath(path);
-    const selection = await dialog.showSaveDialog(window!, { title: '下载文件到', defaultPath: basename(remote), properties: ['showOverwriteConfirmation'] });
+    const selection = await dialog.showSaveDialog(window!, { title: t('下载文件到'), defaultPath: basename(remote), properties: ['showOverwriteConfirmation'] });
     if (selection.canceled || !selection.filePath) return null;
     if (owned(id) !== current || !current.connected) throw new Error('原会话已结束');
     const transferId = randomUUID(), destination = selection.filePath;
@@ -288,6 +296,13 @@ function createWindow(): void {
   window.on('closed', () => { closeAll(); keyImports.clear(); window = undefined; });
   void window.loadFile(indexPath);
 }
+function updateMenu(): void {
+  Menu.setApplicationMenu(Menu.buildFromTemplate([
+    { label: 'Harbor SSH', submenu: [{ role: 'about', label: t('关于 Harbor SSH') }, { type: 'separator' }, { role: 'quit', label: t('退出 Harbor SSH') }] },
+    { label: t('编辑'), submenu: [{ role: 'undo', label: t('撤销') }, { role: 'redo', label: t('重做') }, { type: 'separator' }, { role: 'cut', label: t('剪切') }, { role: 'copy', label: t('复制') }, { role: 'paste', label: t('粘贴') }, { role: 'selectAll', label: t('全选') }] },
+    { label: t('窗口'), submenu: [{ role: 'minimize', label: t('最小化') }, { role: 'zoom', label: t('缩放') }, { role: 'close', label: t('关闭') }] }
+  ]));
+}
 if (ownsProfile) app.whenReady().then(() => {
   app.setName('Harbor SSH');
   const dir = app.getPath('userData');
@@ -300,11 +315,7 @@ if (ownsProfile) app.whenReady().then(() => {
   }, () => store.hasIdentities());
   identities = new Identities(store, vault);
   setupIPC();
-  Menu.setApplicationMenu(Menu.buildFromTemplate([
-    { label: 'Harbor SSH', submenu: [{ role: 'about' }, { type: 'separator' }, { role: 'quit' }] },
-    { label: '编辑', submenu: [{ role: 'undo' }, { role: 'redo' }, { type: 'separator' }, { role: 'cut' }, { role: 'copy' }, { role: 'paste' }, { role: 'selectAll' }] },
-    { label: '窗口', submenu: [{ role: 'minimize' }, { role: 'zoom' }, { role: 'close' }] }
-  ]));
+  updateMenu();
   createWindow();
   app.on('activate', () => { if (!window) createWindow(); });
 }).catch(() => { dialog.showErrorBox('Harbor SSH 无法启动', '无法初始化应用数据。请保留原数据库并检查文件访问权限或数据库版本。'); app.quit(); });

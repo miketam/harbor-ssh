@@ -4,7 +4,15 @@
 
 Harbor SSH is a local SSH desktop client built with Electron, React, TypeScript, ssh2 and xterm.js. It provides tabbed terminals, an encrypted identity vault, SFTP, local port forwarding and single-hop jump hosts. No cloud account or API key is required.
 
-Current version: **0.4.2**. macOS is the primary development and validation platform. Windows packages are available, but Windows hardware validation is still pending. The application stores its own data and does not import or modify another SSH client's data.
+Current source version: **0.4.3**. macOS is the primary development and validation platform. Windows packages are available, but Windows hardware validation is still pending. The application stores its own data and does not import or modify another SSH client's data.
+
+## Interface language
+
+Use the **语言 / Language** selector at the top to switch between **简体中文** and **English**. Chinese remains the default, and your choice is restored after restart. Switching takes effect immediately without disconnecting SSH or clearing the terminal. Host management, the identity vault, authentication, trust prompts, SFTP, forwarding, menus and application error messages support English.
+
+Host names, groups, file names, remote terminal output and server authentication prompts stay unchanged. Native file picker buttons follow the operating system language; application-provided titles follow the selected language.
+
+Validation: `npm run typecheck`, `npm test`, and `npm run test:i18n`. Translations live in `locales/en.ts`, keyed by Chinese source messages, with `{0}` and `{1}` placeholders. Add translations when introducing new messages.
 
 ## Screenshots
 
@@ -29,15 +37,15 @@ These are real screenshots from a local test environment with example accounts a
 
 ## Download and install
 
-[Latest release](https://github.com/miketam/harbor-ssh/releases/latest) · [v0.4.2 release notes](https://github.com/miketam/harbor-ssh/releases/tag/v0.4.2) · [SHA256SUMS](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/SHA256SUMS)
+[Latest release](https://github.com/miketam/harbor-ssh/releases/latest) · [v0.4.3 release notes](https://github.com/miketam/harbor-ssh/releases/tag/v0.4.3) · [SHA256SUMS](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/SHA256SUMS)
 
-These links are pinned to v0.4.2. Check the latest release page for future versions.
+These links are pinned to v0.4.3. Check the latest release page for future versions.
 
 | Device | Recommended download | Alternative |
 |---|---|---|
-| Apple M-series Mac (Apple Silicon) | [arm64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-arm64.dmg) | [arm64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-arm64.zip) |
-| Intel Mac | [x64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-x64.dmg) | [x64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-x64.zip) |
-| Windows x64 (Intel / AMD) | [EXE installer](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-win-x64-setup.exe) | No native Windows ARM64 installer |
+| Apple M-series Mac (Apple Silicon) | [arm64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-arm64.dmg) | [arm64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-arm64.zip) |
+| Intel Mac | [x64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-x64.dmg) | [x64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-x64.zip) |
+| Windows x64 (Intel / AMD) | [EXE installer](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-win-x64-setup.exe) | No native Windows ARM64 installer |
 
 On a Mac, open **Apple menu > About This Mac**: choose arm64 for an Apple M-series chip, or x64 for an Intel processor. macOS 13 or later is required. On Windows, check **Settings > System > About > System type**.
 
@@ -52,13 +60,13 @@ Download `SHA256SUMS` and compare the calculated SHA-256 with the entry for your
 macOS (replace arm64 with x64 for Intel):
 
 ```bash
-shasum -a 256 harbor-ssh-0.4.2-mac-arm64.dmg
+shasum -a 256 harbor-ssh-0.4.3-mac-arm64.dmg
 ```
 
 Windows PowerShell:
 
 ```powershell
-Get-FileHash .\harbor-ssh-0.4.2-win-x64-setup.exe -Algorithm SHA256
+Get-FileHash .\harbor-ssh-0.4.3-win-x64-setup.exe -Algorithm SHA256
 ```
 
 A matching checksum confirms that the file matches the release asset; it is not a security certification.

@@ -48,6 +48,7 @@ export type SshEvent =
   | { type: 'forwards'; sessionId: string };
 export type SessionEvent = SshEvent & { tabId: string };
 export interface HarborAPI {
+  setLocale(locale: 'zh-CN' | 'en-US'): Promise<void>;
   listHosts(): Promise<Host[]>;
   saveHost(input: HostInput & { id?: string }): Promise<Host>;
   deleteHost(id: string): Promise<void>;

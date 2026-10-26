@@ -75,13 +75,13 @@ export class Identities {
     this.store.saveIdentityRow(id, this.vault.encrypt(id, record));
     return summary(id, record);
   }
-  async remember(hostId: string, auth: AuthCredentials): Promise<void> {
+  async remember(hostId: string, auth: AuthCredentials, identitySuffix = '身份'): Promise<void> {
     if (auth.method === 'interactive') throw new Error('交互认证的回答不能保存');
     await this.vault.open();
     const host = this.store.getHost(hostId), id = host.identityId ?? randomUUID();
     const record: IdentityRecord = host.identityId
       ? this.vault.decrypt(id, this.store.identityRow(id).ciphertext)
-      : { name: `${host.name} 身份`, username: host.username, method: auth.method, password: '', privateKey: '', passphrase: '', requiresPassphrase: false };
+      : { name: `${host.name} ${identitySuffix}`, username: host.username, method: auth.method, password: '', privateKey: '', passphrase: '', requiresPassphrase: false };
     if (auth.method !== record.method) throw new Error('身份方式已变化，请重新连接');
     if (auth.method === 'password') record.password = auth.password;
     else { record.passphrase = auth.passphrase; record.requiresPassphrase = false; }

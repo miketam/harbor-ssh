@@ -4,7 +4,15 @@
 
 Harbor SSH 是基于 Electron、React、TypeScript、ssh2 和 xterm.js 的本地 SSH 桌面客户端，提供多标签终端、加密身份库、SFTP 文件传输、本地端口转发和单跳跳板机。无需云端账号或 API Key。
 
-当前源码版本为 **0.4.2**。主要开发与验证平台为 macOS；Windows 已提供构建脚本，仍需实机验收。应用在自己的目录存储数据，不读取、导入或修改其他 SSH 客户端的数据。
+当前源码版本为 **0.4.3**。主要开发与验证平台为 macOS；Windows 已提供构建脚本，仍需实机验收。应用在自己的目录存储数据，不读取、导入或修改其他 SSH 客户端的数据。
+
+## 界面语言
+
+顶部「语言」下拉框可切换 **简体中文 / English**，默认保留中文，重启后恢复选择。切换即时生效，不会断开 SSH 或清空终端；主机管理、身份库、认证、信任提示、SFTP、端口转发、菜单和应用错误提示均提供英文。
+
+主机名称、分组、文件名、远程终端输出与服务器认证问题保持原文。系统文件选择器自带按钮由操作系统决定语言，应用提供的标题跟随所选语言。
+
+开发验证：`npm run typecheck`、`npm test`、`npm run test:i18n`。翻译集中在 `locales/en.ts`，中文原文作为键，参数使用 `{0}`、`{1}` 占位；增加文案时同步补齐翻译。
 
 ## 界面预览
 
@@ -29,15 +37,15 @@ Harbor SSH 是基于 Electron、React、TypeScript、ssh2 和 xterm.js 的本地
 
 ## 下载与安装
 
-[最新 Release](https://github.com/miketam/harbor-ssh/releases/latest) · [v0.4.2 发布说明](https://github.com/miketam/harbor-ssh/releases/tag/v0.4.2) · [SHA256SUMS](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/SHA256SUMS)
+[最新 Release](https://github.com/miketam/harbor-ssh/releases/latest) · [v0.4.3 发布说明](https://github.com/miketam/harbor-ssh/releases/tag/v0.4.3) · [SHA256SUMS](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/SHA256SUMS)
 
-下表为 v0.4.2 的固定下载链接；后续版本请查看最新 Release。
+下表为 v0.4.3 的固定下载链接；后续版本请查看最新 Release。
 
 | 设备 | 推荐下载 | 备用下载 |
 |---|---|---|
-| 苹果 M 系列 Mac（Apple Silicon） | [arm64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-arm64.dmg) | [arm64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-arm64.zip) |
-| Intel Mac | [x64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-x64.dmg) | [x64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-mac-x64.zip) |
-| Windows x64（Intel / AMD） | [EXE 安装程序](https://github.com/miketam/harbor-ssh/releases/download/v0.4.2/harbor-ssh-0.4.2-win-x64-setup.exe) | 暂无 Windows ARM64 原生安装包 |
+| 苹果 M 系列 Mac（Apple Silicon） | [arm64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-arm64.dmg) | [arm64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-arm64.zip) |
+| Intel Mac | [x64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-x64.dmg) | [x64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-x64.zip) |
+| Windows x64（Intel / AMD） | [EXE 安装程序](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-win-x64-setup.exe) | 暂无 Windows ARM64 原生安装包 |
 
 Mac 可在苹果菜单的「关于本机」查看芯片：Apple M 系列选 arm64，Intel 处理器选 x64。Mac 包要求 macOS 13 或更新版本。Windows 可在「设置 → 系统 → 系统信息」查看系统类型。
 
@@ -52,13 +60,13 @@ Mac 可在苹果菜单的「关于本机」查看芯片：Apple M 系列选 arm6
 macOS（Intel 用户将文件名中的 arm64 改为 x64）：
 
 ```bash
-shasum -a 256 harbor-ssh-0.4.2-mac-arm64.dmg
+shasum -a 256 harbor-ssh-0.4.3-mac-arm64.dmg
 ```
 
 Windows PowerShell：
 
 ```powershell
-Get-FileHash .\harbor-ssh-0.4.2-win-x64-setup.exe -Algorithm SHA256
+Get-FileHash .\harbor-ssh-0.4.3-win-x64-setup.exe -Algorithm SHA256
 ```
 
 摘要一致只确认文件与发布附件一致，不代表已经通过系统安全认证。
@@ -220,7 +228,7 @@ OpenSSH 测试拉取 `alpine:3.23`，临时安装 OpenSSH（第二批含 PAM）�
 
 ## Windows x64
 
-安装程序：`release/harbor-ssh-0.4.2-win-x64-setup.exe`。运行后先在「选择安装位置」页浏览或输入安装目录，再点击安装；默认目录为 `%LOCALAPPDATA%\Programs\Harbor SSH`，按当前用户安装，从开始菜单启动。请选择当前用户有写入权限的专用文件夹；系统目录可能需要额外权限。
+安装程序：`release/harbor-ssh-0.4.3-win-x64-setup.exe`。运行后先在「选择安装位置」页浏览或输入安装目录，再点击安装；默认目录为 `%LOCALAPPDATA%\Programs\Harbor SSH`，按当前用户安装，从开始菜单启动。请选择当前用户有写入权限的专用文件夹；系统目录可能需要额外权限。
 
 升级前退出旧版。0.4.2 起会记录安装目录，后续安装默认使用上次记录的位置；0.4.1 及更早版本没有该记录，若曾手动更改目录，升级时需重新选择。升级建议沿用原目录，改选其他目录不会自动清理旧应用文件。卸载只清理本安装包包含的文件及空目录，保留用户自行放入的其他文件，并保留 `%APPDATA%\Harbor SSH` 中的数据库和密钥文件。安装目录选项只影响程序文件，不改变数据目录。Windows 身份库使用系统密钥保护，不支持直接迁移 macOS Keychain 保护的身份库。
 
