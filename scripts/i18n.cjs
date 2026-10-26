@@ -13,14 +13,14 @@ async function launch() {
   app = await electron.launch({ executablePath: process.env.HARBOR_APP_EXECUTABLE || require('electron'), args: process.env.HARBOR_APP_EXECUTABLE ? [] : [root], env });
   page = await app.firstWindow(); page.setDefaultTimeout(12000);
   page.on('pageerror', error => errors.push(error.message));
-  await page.locator('.language-picker select').waitFor();
+  await require('./ui-helpers.cjs').dismissWelcome(page);
 }
 async function language(value) {
-  // Dispatch through the real selector, including while a modal is open.
-  await page.locator('.language-picker select').evaluate((select, value) => {
-    select.value = value; select.dispatchEvent(new Event('change', { bubbles: true }));
-  }, value);
+  // Open settings even when testing a suspended form; its fields must survive.
+  await page.locator('.workspace-controls button').last().evaluate(button => button.click());
+  await page.locator('.language-picker select').selectOption(value);
   await page.waitForFunction(value => document.documentElement.lang === value, value);
+  await page.getByRole('dialog', { name: value === 'en-US' ? 'Settings' : '设置', exact: true }).getByRole('button', { name: value === 'en-US' ? 'Done' : '完成', exact: true }).click();
 }
 async function englishUI() {
   const chinese = await page.locator('body').evaluate(body => {
@@ -96,11 +96,13 @@ async function closeDialog() { await page.getByRole('dialog').last().getByRole('
   await closeDialog();
   await app.close(); app = null; await launch();
   await page.waitForFunction(() => document.documentElement.lang === 'en-US');
+  await page.locator('.workspace-controls').getByRole('button', { name: 'Settings', exact: true }).click();
   assert.equal(await page.locator('.language-picker select').inputValue(), 'en-US');
+  await page.getByRole('button', { name: 'Done', exact: true }).click();
   await page.getByText('Tab restored, ready to connect', { exact: true }).waitFor();
   assert.equal(fixture.stats.connections, 1, 'Restart must not auto-connect');
   await page.evaluate(() => localStorage.setItem('harbor.locale', 'invalid'));
-  await page.reload(); await page.getByLabel('语言', { exact: true }).waitFor();
+  await page.reload(); await page.locator('.workspace-controls').getByRole('button', { name: '设置', exact: true }).waitFor();
   assert.equal(await page.locator('html').getAttribute('lang'), 'zh-CN');
   assert.deepEqual(errors, []);
   const report = { result: 'passed', measurements, checks: ['English screens and native menu/dialog titles', 'validation errors switch language live', 'form data preserved', 'SSH connection, terminal instance and input/output preserved', 'minimum-window layout', 'port forwarding', 'restart persistence', 'invalid locale fallback'], dataDir };

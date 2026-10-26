@@ -1,5 +1,5 @@
 import { translate, type Locale } from '../locales';
-import { app, BrowserWindow, ipcMain, Menu, utilityProcess, safeStorage, dialog, type UtilityProcess } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, utilityProcess, safeStorage, dialog, shell, type UtilityProcess } from 'electron';
 import { mkdirSync, chmodSync, openSync, readSync, closeSync, writeFileSync, renameSync, rmSync, statSync } from 'node:fs';
 import { basename, join, resolve, dirname, posix } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -8,6 +8,7 @@ import { Store } from './store';
 import { Vault } from './vault';
 import { forwardInput, remotePath } from './resources';
 import { Identities } from './identities';
+import { checkLatestRelease } from './updates';
 import type { AuthCredentials, ConnectRequest, Host, SessionEvent, SshEvent, ResourceRequest, JumpConnection } from '../shared';
 
 let locale: Locale = 'zh-CN';
@@ -17,6 +18,8 @@ let store: Store;
 let vault: Vault;
 let identities: Identities;
 let rendererVersion = 0;
+let updatePage: string | null = null;
+let pendingUpdateCheck: ReturnType<typeof checkLatestRelease> | null = null;
 interface RunningSession {
   id: string; tabId: string; host: Host; worker: UtilityProcess;
   jumpHost?: Host; connected: boolean; exited?: boolean;
@@ -81,6 +84,16 @@ function rpc(current: RunningSession, request: ResourceRequest): Promise<any> {
   });
 }
 function setupIPC(): void {
+  handle('updates:check', async () => {
+    if (!pendingUpdateCheck) pendingUpdateCheck = checkLatestRelease(app.getVersion()).finally(() => { pendingUpdateCheck = null; });
+    const checked = await pendingUpdateCheck;
+    updatePage = checked.page;
+    return checked.result;
+  });
+  handle('updates:open', () => {
+    if (!updatePage) throw new Error('请先检查更新');
+    return shell.openExternal(updatePage);
+  });
   handle('settings:locale', value => {
     if (value !== 'zh-CN' && value !== 'en-US') throw new Error('Unsupported language');
     locale = value;

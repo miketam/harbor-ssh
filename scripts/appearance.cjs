@@ -13,8 +13,10 @@ async function launch() {
   app = await electron.launch({ executablePath: process.env.HARBOR_APP_EXECUTABLE || require('electron'), args: process.env.HARBOR_APP_EXECUTABLE ? [] : [root], env });
   page = await app.firstWindow(); page.setDefaultTimeout(12000);
   page.on('pageerror', error => errors.push(error.message));
-  await page.getByLabel('主题', { exact: true }).waitFor();
+  await require('./ui-helpers.cjs').dismissWelcome(page);
 }
+async function settings() { await page.locator('.workspace-controls').getByRole('button', { name: '设置', exact: true }).click(); await page.locator('.terminal-settings summary').click(); }
+async function done() { await page.getByRole('button', { name: '完成', exact: true }).click(); }
 async function geometry() {
   return page.evaluate(() => ({ width: innerWidth, height: innerHeight, terminal: document.querySelector('.terminal-stage').getBoundingClientRect().width, overflow: document.documentElement.scrollWidth > innerWidth, toolbarOverflow: document.querySelector('.terminal-toolbar').scrollWidth > document.querySelector('.terminal-toolbar').clientWidth }));
 }
@@ -47,6 +49,7 @@ async function geometry() {
     await page.waitForTimeout(150);
     assert.equal((await geometry()).terminal, before.terminal);
   }
+  await settings();
   const themeIds = await page.getByLabel('主题', { exact: true }).locator('option').evaluateAll(options => options.map(o => o.value));
   assert.equal(themeIds.length, 6);
   for (const id of themeIds) {
@@ -58,18 +61,21 @@ async function geometry() {
     assert.equal(colors.panel, colors.terminal, `Theme must reach xterm: ${id}`);
     await page.screenshot({ path: join(artifacts, `${id}-minimum.png`) });
   }
+  await done();
   await page.locator('.xterm-helper-textarea').focus(); await page.keyboard.type('appearance-input-check');
   await page.waitForFunction(() => document.querySelector('.xterm-screen').textContent.includes('appearance-input-check'));
   await page.getByRole('button', { name: '收起主机栏' }).click();
   await app.close(); app = null; await launch();
+  await settings();
   assert.equal(await page.getByLabel('主题', { exact: true }).inputValue(), 'github-light');
+  await done();
   assert.equal(await page.locator('#host-sidebar').isVisible(), false);
   await page.evaluate(() => localStorage.setItem('harbor.appearance', '{broken'));
-  await page.reload(); await page.getByRole('button', { name: '收起主机栏' }).waitFor();
-  assert.equal(await page.getByLabel('主题', { exact: true }).inputValue(), 'harbor');
+  await page.reload(); await require('./ui-helpers.cjs').dismissWelcome(page); await settings();
+  assert.equal(await page.getByLabel('主题', { exact: true }).inputValue(), 'harbor'); await done();
   await page.evaluate(() => localStorage.setItem('harbor.appearance', JSON.stringify({ themeId: 'unknown', sidebarCollapsed: 'yes' })));
-  await page.reload(); await page.getByRole('button', { name: '收起主机栏' }).waitFor();
-  assert.equal(await page.getByLabel('主题', { exact: true }).inputValue(), 'harbor');
+  await page.reload(); await require('./ui-helpers.cjs').dismissWelcome(page); await settings();
+  assert.equal(await page.getByLabel('主题', { exact: true }).inputValue(), 'harbor'); await done();
   assert.deepEqual(errors, []);
   const report = { result: 'passed', themes: themeIds, measurements, checks: ['SSH PTY resize', 'input/output and connection preserved', 'six live terminal themes', 'restart preferences', 'invalid preferences fallback', 'four window sizes without overflow'], dataDir };
   writeFileSync(join(artifacts, 'result.json'), JSON.stringify(report, null, 2)); console.log(JSON.stringify(report, null, 2));

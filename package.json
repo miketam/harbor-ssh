@@ -1,7 +1,7 @@
 {
   "name": "harbor-ssh",
   "productName": "Harbor SSH",
-  "version": "0.4.3",
+  "version": "0.4.6",
   "private": true,
   "main": "dist-electron/electron/main.js",
   "scripts": {
@@ -19,7 +19,9 @@
     "test:upgrade": "npm run package:mac && node scripts/batch4.cjs",
     "package:win": "npm run build && node scripts/package-win.mjs",
     "test:appearance": "npm run build && node scripts/appearance.cjs",
-    "test:i18n": "npm run build && node scripts/i18n.cjs"
+    "test:i18n": "npm run build && node scripts/i18n.cjs",
+    "test:layouts": "npm run build && node scripts/layouts.cjs",
+    "test:updates": "npm run build && node scripts/updates.cjs"
   },
   "dependencies": {
     "@xterm/addon-fit": "0.11.0",

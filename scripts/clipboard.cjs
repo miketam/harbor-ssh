@@ -22,7 +22,7 @@ let app, fixture, savedClipboard;
 (async () => {
   fixture = await serverFixture();
   app = await electron.launch({ executablePath: process.env.HARBOR_APP_EXECUTABLE || require('electron'), args: process.env.HARBOR_APP_EXECUTABLE ? [] : [root], env });
-  const page = await app.firstWindow(); page.setDefaultTimeout(12000);
+  const page = await app.firstWindow(); await require('./ui-helpers.cjs').dismissWelcome(page); page.setDefaultTimeout(12000);
   await page.getByRole('button', { name: '＋ 新增主机', exact: true }).click();
   for (const [label, value] of [['主机名称', '中文粘贴验证'], ['服务器地址', '127.0.0.1'], ['用户名', 'fixture'], ['端口', String(fixture.port)]]) await page.getByLabel(label, { exact: true }).fill(value);
   await page.getByRole('button', { name: '保存主机', exact: true }).click();

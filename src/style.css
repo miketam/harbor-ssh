@@ -23,3 +23,165 @@ html[lang="en-US"] .terminal-toolbar{height:auto;min-height:46px;flex-wrap:wrap}
 html[lang="en-US"] .host-actions{flex-wrap:wrap;margin-left:auto}
 html[lang="en-US"] .terminal-status{height:auto;min-height:34px;flex-wrap:wrap;padding-top:7px;padding-bottom:7px}
 html[lang="en-US"] .dialog-actions{flex-wrap:wrap}
+
+/* Shared application chrome; terminal palettes remain independent. */
+:root{color-scheme:dark;--paper:#292b30;--muted:#aeb3be;--amber:#5796ed;--radius:6px;color:#e1e4ea;background:#18191c}
+[hidden]{display:none!important}
+.app-shell{grid-template-columns:240px minmax(0,1fr);background:#18191c}
+.sidebar{background:#202124;border-color:#34373e;color:#e1e4ea}
+.brand{padding:18px 16px;gap:10px}
+.brand-mark{width:26px;height:26px;font-size:17px;line-height:26px;letter-spacing:-2px;border-radius:5px;background:#34373e;color:#e1e4ea}
+.brand-mark span{color:#83abe5}
+.brand strong{font-size:14px;letter-spacing:0;font-weight:600}
+.sidebar-actions{padding:8px 12px 12px}
+.section-title{margin:0 2px 10px;font-size:12px}
+.count,.host-group h2,.host-group h2>span{color:#aeb3be}
+.add-button{min-height:32px;background:#34373e;color:#e1e4ea;font-size:12px}
+.search{margin-top:10px}
+.search input{background:#18191c;color:#e1e4ea;min-height:34px;border:1px solid #3c4048}
+.search>span{color:#aeb3be;top:5px}
+.host-list{padding:0 8px}
+.host-group{margin-bottom:14px}
+.host-group h2{margin:10px 8px 6px}
+.host-row{min-height:52px;padding:8px;gap:8px;color:#e1e4ea}
+.host-row.selected,.manager-nav.selected{background:#34373e}
+.host-row:hover{background:#2b2e34}
+.host-text{gap:4px}
+.host-text strong{font-size:13px;font-weight:500}
+.host-text small{color:#aeb3be;font-size:11px}
+.host-symbol,.selected .host-symbol{background:transparent;color:#aeb3be;font-size:16px}
+.host-symbol.live{background:transparent;color:#79c899}
+.host-arrow{display:none}
+.sidebar-footer{padding:10px 16px;border-color:#34373e}
+.sidebar-footer button{color:#c2c7d0;min-height:32px}
+.sidebar-footer>div{color:#989fab;font-size:11px}
+.sidebar-footer>button>span:last-child{display:none}
+.workspace{padding:0;background:#18191c;color:#e1e4ea}
+.workspace-controls{padding:6px 10px;gap:8px;border-bottom:1px solid #34373e;min-height:44px;flex-wrap:wrap;color:#bfc5cf}
+.workspace-controls .quiet-button{min-height:30px;color:#c2c7d0;padding:0 8px}
+.layout-label{font-size:12px;margin-right:auto;color:#aeb3be}
+kbd{font:10px ui-monospace,monospace;color:#aeb3be;margin-left:4px}
+.terminal-panel{border-radius:0;box-shadow:none;background:var(--terminal-bg)}
+.terminal-toolbar,.tab-item{background:#202124}
+.terminal-toolbar{border-bottom:1px solid #34373e;min-height:40px;height:auto;flex-wrap:wrap;padding-right:6px}
+.tab-strip{height:40px;flex-basis:160px}
+.tab-item{border-top:0;border-bottom:2px solid transparent}
+.tab-item.active{background:#2b2e34;border-color:#5796ed}
+.tab-item>button[role=tab],.tab-item.active>button[role=tab]{font-size:12px;color:#e1e4ea}
+.close-tab{color:#aeb3be;min-height:30px}
+.host-actions{margin-left:auto;flex-wrap:wrap}
+.host-actions .quiet-button{color:#c2c7d0}
+.host-actions .disconnect-button{background:#34373e;color:#e1e4ea}
+.primary-button{background:#377bd7;color:#fff;gap:10px}
+.primary-button:hover{background:#4389e8}
+.secondary-button{background:#3a3e47;color:#e1e4ea}
+.quiet-button{color:#c2c7d0}
+.session-tools-bar{background:#202124;border-color:#34373e;color:#aeb3be;min-height:32px}
+.session-tools-bar .quiet-button{color:#c2c7d0}
+.terminal-stage{padding:10px 8px 6px 12px}
+.terminal-status{height:28px;font-size:11px}
+.status-dot.connected{background:#72c593}
+.dialog{background:#292b30;color:#e1e4ea;border:1px solid #41454e;border-radius:10px;padding:22px;box-shadow:0 12px 40px #0005}
+.dialog h2{font-size:18px}
+.dialog h3{font-size:14px}
+.dialog label,.dialog-intro,.dialog label small,.field-note,.list-note,.identity-row span,.identity-row small,.known-row small{color:#b8bfca}
+input,select,textarea{background:#202124;color:#e1e4ea;border-color:#4b515c}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline-color:#79a8f0}
+.icon-button{color:#b8bfca}
+.identity-row,.known-row,.transfer-row,.forward-row,.remote-files,.remote-row{border-color:#41454e}
+.fingerprint-detail,.jump-auth{background:#202124;color:#e1e4ea;border-color:#41454e}
+.fingerprint-detail dt,.jump-auth legend,.remote-row small,.transfer-row small{color:#b8bfca}
+.remote-row .file-name,.remote-row .file-name:disabled{color:#e1e4ea}
+.trust-badge{background:#48412f;color:#f1d499}
+.forget-confirm{background:#49352f}
+.manager-nav{margin:8px 12px;padding:0 12px;text-align:left;background:transparent;color:#e1e4ea;font-size:13px}
+.layout-manager .sidebar-footer{margin-top:auto}
+.host-browser{display:grid;grid-template-columns:minmax(0,1fr) 250px;flex:1;min-height:0;overflow:auto;background:#18191c}
+.host-browser-list{padding:20px;min-width:0;overflow:auto}
+.host-browser-list header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.host-browser h2{font-size:18px;margin:0}
+.host-browser-list input{min-height:36px;font-size:13px}
+.host-table-scroll{overflow:auto;margin-top:20px}
+.host-table{border-collapse:collapse;width:100%;font-size:12px;text-align:left}
+.host-table th{color:#aeb3be;font-weight:500;padding:10px 8px;border-bottom:1px solid #34373e}
+.host-table td{padding:8px;border-bottom:1px solid #34373e;overflow-wrap:anywhere;max-width:240px}
+.host-table tr.selected{background:#34373e}
+.host-table button{display:flex;gap:8px;align-items:center;background:transparent;color:#e1e4ea;text-align:left;min-height:32px;padding:0;overflow-wrap:anywhere;font-size:13px}
+.host-inspector{border-left:1px solid #34373e;padding:22px 18px;overflow:auto}
+.host-inspector h2{overflow-wrap:anywhere}
+.host-inspector dl{display:grid;grid-template-columns:70px minmax(0,1fr);gap:18px 10px;font-size:12px;margin:26px 0}
+.host-inspector dt{color:#aeb3be}
+.host-inspector dd{margin:0;overflow-wrap:anywhere}
+.inspector-actions{display:flex;gap:8px;flex-wrap:wrap}
+.terminal-panel.browsing{flex:0 0 auto;border-top:1px solid #34373e}
+.browsing .host-actions,.browsing .terminal-kind{display:none}
+.layout-focus .session-tools-bar{min-height:28px}
+.dialog:has(.layout-options){width:min(850px,calc(100vw - 48px));max-width:850px}
+.layout-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.layout-option{background:#202124;color:#e1e4ea;border:1px solid #454a54;padding:12px;display:flex;flex-direction:column;gap:10px;text-align:left}
+.layout-option.chosen{border:2px solid #79a8f0;padding:11px;background:#293444}
+.layout-option>strong{font-size:13px}
+.layout-option>span:last-child{font-size:12px;line-height:1.65;color:#b8bfca}
+.layout-preview{height:96px;width:100%;display:flex;border:1px solid #555d69;border-radius:4px;background:#18191c;position:relative;overflow:hidden}
+.preview-nav{width:24%;background:#34373e;border-right:1px solid #555d69}
+.preview-content{flex:1;padding:15px 8px}
+.preview-content i{display:block;width:70%;height:3px;background:#838d9d;margin-bottom:8px}
+.preview-content i:nth-child(even){width:45%}
+.preview-manager .preview-content i{height:8px;width:100%;background:#34373e}
+.preview-detail{width:25%;background:#292b30;border-left:1px solid #555d69}
+.preview-focus .preview-nav{display:none}
+.preview-search{position:absolute;width:56%;height:30px;left:22%;top:42%;background:#3b4350;border:1px solid #79a8f0;border-radius:3px}
+.settings-fields{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px}
+.switcher-results{max-height:300px;overflow:auto;margin-top:16px}
+.switcher-results button{width:100%;display:flex;justify-content:space-between;gap:16px;text-align:left;background:transparent;color:#e1e4ea;padding:10px 12px}
+.switcher-results button.selected{background:#343e50}
+.switcher-results strong{font-size:13px;overflow-wrap:anywhere}
+.switcher-results small{font:12px ui-monospace,monospace;color:#b8bfca}
+@media(max-width:1040px){.app-shell{grid-template-columns:220px minmax(0,1fr)}.app-shell.sidebar-collapsed{grid-template-columns:minmax(0,1fr)}.workspace{padding:0}.host-browser{grid-template-columns:minmax(0,1fr) 210px}.host-browser-list{padding:14px}.host-inspector{padding:18px 12px}.host-table th:nth-child(3),.host-table td:nth-child(3){display:none}.host-text small{font-size:11px}.layout-label{display:none}}
+.group-filters{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.group-filters button{background:transparent;color:#b8bfca;min-height:30px;padding:4px 10px;font-size:12px}
+.group-filters button[aria-pressed=true]{background:#34373e;color:#e1e4ea}
+.host-group summary{font-size:12px;color:#aeb3be;cursor:pointer;padding:8px;user-select:none}
+.host-group summary>span{float:right;font:11px ui-monospace,monospace}
+.host-group summary:focus-visible{outline:2px solid #79a8f0;outline-offset:-2px}
+/* Settings fields share a vertical label/control layout; do not inherit toolbar sizing. */
+.settings-fields>label{display:flex;flex-direction:column;gap:7px;min-width:0;margin:0}
+.settings-fields>label>select{display:block;width:100%;min-width:0;min-height:43px;margin:0}
+@media(max-height:700px){
+  .dialog:has(.settings-fields){padding:18px}
+  .dialog:has(.settings-fields) .dialog-heading{margin-bottom:10px}
+  .dialog:has(.settings-fields) h3{margin:8px 0}
+  .dialog:has(.settings-fields) .dialog-intro{margin-bottom:10px}
+  .dialog:has(.settings-fields) .layout-preview{height:48px}
+  .dialog:has(.settings-fields) .settings-fields{margin-top:14px}
+  .dialog:has(.settings-fields) .dialog-actions{margin-top:16px}
+}
+@media(max-height:700px){
+  .dialog:has(.settings-fields) .preview-content{padding:8px}
+  .dialog:has(.settings-fields) .preview-content i{height:2px;margin-bottom:5px}
+  .dialog:has(.settings-fields) .preview-manager .preview-content i{height:4px;margin-bottom:4px}
+  .dialog:has(.settings-fields) .preview-search{top:30%;height:20px}
+}
+
+.terminal-settings{border-top:1px solid #41454e;margin-top:20px;padding-top:12px}
+.terminal-settings h3{margin:0 0 12px}
+.terminal-settings .settings-fields{margin-top:0}
+
+.terminal-settings summary{cursor:pointer;font-size:14px;font-weight:600;color:#e1e4ea;padding:4px 0}
+.terminal-settings[open] summary{margin-bottom:12px}
+.terminal-settings summary:focus-visible{outline:2px solid #79a8f0;outline-offset:3px}
+.system-update{border-top:1px solid #41454e;margin-top:20px;padding-top:12px}
+.system-update h3{font-size:14px;color:#e1e4ea;margin:4px 0 12px}
+.system-update-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.system-update-row>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.system-update-row strong{font-size:13px;font-weight:500;color:#e1e4ea;overflow-wrap:anywhere}
+.system-update-row small,.system-update p{font-size:11px;line-height:1.6;color:#b8bfca}
+.system-update-row .update-error{color:#e9a99b}
+.system-update-row button{flex-shrink:0;min-height:34px}
+.system-update p{margin:12px 0 0}
+.update-release{background:transparent;color:#9fc3ff;font-size:12px;padding:0;margin-top:12px;text-align:left}
+.update-notice{display:flex;align-items:center;gap:14px;background:#2d3d34;color:#e3eadb;border:1px solid #637a69;border-radius:5px;padding:8px 12px;margin:0 0 12px;font-size:12px}
+.update-notice>span{flex:1}
+.update-notice button{background:transparent;color:#b9d3b8;font-size:12px;padding:4px}
+.update-notice .update-dismiss{font-size:19px;min-width:24px}
+.update-notice button:focus-visible,.update-release:focus-visible,.system-update-row button:focus-visible{outline:2px solid #79a8f0;outline-offset:3px}

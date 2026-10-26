@@ -2,6 +2,8 @@ import { contextBridge, ipcRenderer } from 'electron';
 import type { HarborAPI, SessionEvent } from '../shared';
 const api: HarborAPI = {
   setLocale: locale => ipcRenderer.invoke('settings:locale', locale),
+  checkUpdates: () => ipcRenderer.invoke('updates:check'),
+  openUpdatePage: () => ipcRenderer.invoke('updates:open'),
   listHosts: () => ipcRenderer.invoke('hosts:list'),
   saveHost: input => ipcRenderer.invoke('hosts:save', input),
   deleteHost: id => ipcRenderer.invoke('hosts:delete', id),

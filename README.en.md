@@ -4,7 +4,7 @@
 
 Harbor SSH is a local SSH desktop client built with Electron, React, TypeScript, ssh2 and xterm.js. It provides tabbed terminals, an encrypted identity vault, SFTP, local port forwarding and single-hop jump hosts. No cloud account or API key is required.
 
-Current source version: **0.4.3**. macOS is the primary development and validation platform. Windows packages are available, but Windows hardware validation is still pending. The application stores its own data and does not import or modify another SSH client's data.
+Current source version: **0.4.6**. macOS is the primary development and validation platform. Windows packages are available, but Windows hardware validation is still pending. The application stores its own data and does not import or modify another SSH client's data.
 
 ## Interface language
 
@@ -141,7 +141,7 @@ Detailed packaging and backup notes: [PACKAGING.md](PACKAGING.md) (Chinese).
 
 The renderer uses sandboxing and context isolation with Node integration disabled. Preload exposes fixed APIs, and IPC checks the local top-level frame. Secrets enter client memory during authentication; JavaScript cannot guarantee erasure of every string copy. Remote HTML is not loaded, OSC 52 clipboard writes are disabled, and terminal logs are not saved. Signing changes may cause new system key-access prompts.
 
-Cloud synchronization, multiple jump hops, remote/dynamic forwarding, hardware keys, a key-rotation UI and automatic updates are not included.
+Settings checks GitHub's latest stable release at startup and every 6 hours while the app runs. A compatible newer release triggers a reminder; you can also check manually and open its release page. Downloading and installing remain manual. Cloud synchronization, multiple jump hops, remote/dynamic forwarding, hardware keys, a key-rotation UI, and background installation are not included.
 
 ## Development and validation
 

@@ -11,7 +11,7 @@ let app; let fixture; let page;
 const errors = [];
 async function launch() {
   app = await electron.launch({ executablePath: require('electron'), args: [root], env });
-  page = await app.firstWindow(); page.setDefaultTimeout(12000);
+  page = await app.firstWindow(); await require('./ui-helpers.cjs').dismissWelcome(page); page.setDefaultTimeout(12000);
   page.on('pageerror', e => errors.push(e.message));
   await page.getByRole('heading', { name: '终端，准备就绪。' }).waitFor();
 }
@@ -63,7 +63,7 @@ function scanFiles(dir, token) {
   await page.locator('.terminal-status').getByText('已断开', { exact: true }).waitFor();
   await app.close(); app = undefined;
   // Reopening the same profile must retain metadata and trust, never the password.
-  app = await electron.launch({ executablePath: require('electron'), args: [root], env }); page = await app.firstWindow(); page.setDefaultTimeout(12000); page.on('pageerror', e => errors.push(e.message));
+  app = await electron.launch({ executablePath: require('electron'), args: [root], env }); page = await app.firstWindow(); await require('./ui-helpers.cjs').dismissWelcome(page); page.setDefaultTimeout(12000); page.on('pageerror', e => errors.push(e.message));
   await page.getByRole('heading', { name: '本地 SSH 验证', exact: true }).waitFor();
   assert.equal(await page.locator('input[type=password]').count(), 0);
   await connect(false, 'fixture-wrong-password');

@@ -16,7 +16,7 @@ const checks = [];
 const activePanel = () => page.getByRole('tabpanel');
 const status = text => activePanel().locator('.terminal-status').getByText(text, { exact: true });
 async function launch() {
-  app = await electron.launch({ executablePath: process.env.HARBOR_APP_EXECUTABLE || require('electron'), args: process.env.HARBOR_APP_EXECUTABLE ? [] : [root], env }); page = await app.firstWindow(); page.setDefaultTimeout(15000);
+  app = await electron.launch({ executablePath: process.env.HARBOR_APP_EXECUTABLE || require('electron'), args: process.env.HARBOR_APP_EXECUTABLE ? [] : [root], env }); page = await app.firstWindow(); await require('./ui-helpers.cjs').dismissWelcome(page); page.setDefaultTimeout(15000);
   page.on('pageerror', e => errors.push(e.message)); await page.getByRole('heading', { level: 1 }).waitFor();
 }
 async function addHost(name, port, identityName = '', interactive = false) {

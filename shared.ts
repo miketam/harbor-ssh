@@ -18,6 +18,7 @@ export interface IdentityInput {
 export interface VaultStatus { state: 'new' | 'ready' | 'unavailable'; message: string }
 export interface WorkspaceTab { id: string; hostId: string }
 export interface WorkspaceState { tabs: WorkspaceTab[]; activeTabId: string | null; selectedHostId: string | null }
+export interface UpdateCheck { currentVersion: string; latestVersion: string; status: 'available' | 'up-to-date' | 'unsupported'; checkedAt: number }
 export interface ConnectRequest {
   tabId: string; hostId: string; password?: string; passphrase?: string; jumpPassword?: string; jumpPassphrase?: string; remember?: boolean; columns: number; rows: number;
 }
@@ -49,6 +50,8 @@ export type SshEvent =
 export type SessionEvent = SshEvent & { tabId: string };
 export interface HarborAPI {
   setLocale(locale: 'zh-CN' | 'en-US'): Promise<void>;
+  checkUpdates(): Promise<UpdateCheck>;
+  openUpdatePage(): Promise<void>;
   listHosts(): Promise<Host[]>;
   saveHost(input: HostInput & { id?: string }): Promise<Host>;
   deleteHost(id: string): Promise<void>;
