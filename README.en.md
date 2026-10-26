@@ -8,7 +8,7 @@ Current source version: **0.4.6**. macOS is the primary development and validati
 
 ## Interface language
 
-Use the **语言 / Language** selector at the top to switch between **简体中文** and **English**. Chinese remains the default, and your choice is restored after restart. Switching takes effect immediately without disconnecting SSH or clearing the terminal. Host management, the identity vault, authentication, trust prompts, SFTP, forwarding, menus and application error messages support English.
+Use **Settings > Language** to switch between **简体中文** and **English**. Chinese remains the default, and your choice is restored after restart. Switching takes effect immediately without disconnecting SSH or clearing the terminal. Host management, the identity vault, authentication, trust prompts, SFTP, forwarding, menus and application error messages support English.
 
 Host names, groups, file names, remote terminal output and server authentication prompts stay unchanged. Native file picker buttons follow the operating system language; application-provided titles follow the selected language.
 
@@ -16,22 +16,26 @@ Validation: `npm run typecheck`, `npm test`, and `npm run test:i18n`. Translatio
 
 ## Screenshots
 
-These are real screenshots from a local test environment with example accounts and files. The interface shows v0.4.1 and is in Chinese; see the download section for the current release version.
+These are real screenshots of the v0.4.6 Chinese interface, captured with an isolated local test profile and an example host.
 
-**Hosts and SSH terminal:** select a host in the sidebar and work in the terminal. This screenshot uses the Dracula theme.
+**Classic workspace:** keep hosts and the SSH terminal side by side for quick switching.
 
-![Harbor SSH host list and terminal using the Dracula theme](docs/images/terminal-dracula.png)
+![Harbor SSH classic workspace with host sidebar and SSH terminal](docs/images/layout-classic.png)
 
 <details>
-<summary>More screenshots: identity vault and SFTP</summary>
+<summary>More screenshots: first-run choice, host manager and focus terminal</summary>
 
-**Encrypted identity vault:** manage reusable authentication identities and see their saved status without displaying plaintext passwords.
+**First launch:** choose Classic workspace, Host manager or Focus terminal. You can switch later in Settings.
 
-![Harbor SSH encrypted identity vault with an example identity](docs/images/identity-vault.png)
+![Harbor SSH first-run picker with three workspace layouts](docs/images/layout-welcome.png)
 
-**SFTP file manager:** browse remote directories, upload or download files, and inspect transfer status. The screenshot includes cancelled test transfers.
+**Host manager:** view hosts and connection details together, with open session tabs at the bottom.
 
-![Harbor SSH SFTP file browser and transfer status](docs/images/sftp-files.png)
+![Harbor SSH host manager layout with host list, details and session tabs](docs/images/layout-manager.png)
+
+**Focus terminal:** give the terminal more room while keeping a host switcher in the top bar.
+
+![Harbor SSH focus terminal layout with expanded SSH terminal](docs/images/layout-focus.png)
 
 </details>
 
@@ -95,7 +99,8 @@ Windows installation, uninstallation and runtime behavior still need hardware va
 - Up to 10 tabs and concurrent connections, with independent terminal and authentication state. Closing a connected tab requires confirmation.
 - Password, private-key and multi-round keyboard-interactive authentication, including OTP or MFA questions. Interactive answers are not saved.
 - Confirm SHA-256 server fingerprints before authentication. Changed fingerprints block the connection until you verify and remove the old trust entry.
-- UTF-8 terminals, copy/paste, PTY resizing, a collapsible host sidebar and six terminal themes. Appearance preferences persist locally.
+- UTF-8 terminals, copy/paste and PTY resizing, with three workspace layouts and six terminal themes. Choose a layout on first launch or switch in Settings without losing active connections or terminal output; appearance preferences persist locally.
+- Check for new versions in Settings and get a reminder when a compatible update is available.
 - Single-hop jump hosts. Both servers authenticate independently and have their fingerprints checked. The target private key is not sent to the jump host. Nested jump chains are not supported.
 
 To connect, add a host, enter its address and username, select an authentication method, and verify the server fingerprint through a trusted channel. Host edits affect the next connection; active sessions keep their original configuration.
