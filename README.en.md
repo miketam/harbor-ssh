@@ -37,15 +37,15 @@ These are real screenshots from a local test environment with example accounts a
 
 ## Download and install
 
-[Latest release](https://github.com/miketam/harbor-ssh/releases/latest) · [v0.4.3 release notes](https://github.com/miketam/harbor-ssh/releases/tag/v0.4.3) · [SHA256SUMS](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/SHA256SUMS)
+[Latest release](https://github.com/miketam/harbor-ssh/releases/latest) · [v0.4.6 release notes](https://github.com/miketam/harbor-ssh/releases/tag/v0.4.6) · [SHA256SUMS](https://github.com/miketam/harbor-ssh/releases/download/v0.4.6/SHA256SUMS)
 
-These links are pinned to v0.4.3. Check the latest release page for future versions.
+These links are pinned to v0.4.6. Check the latest release page for future versions.
 
 | Device | Recommended download | Alternative |
 |---|---|---|
-| Apple M-series Mac (Apple Silicon) | [arm64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-arm64.dmg) | [arm64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-arm64.zip) |
-| Intel Mac | [x64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-x64.dmg) | [x64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-mac-x64.zip) |
-| Windows x64 (Intel / AMD) | [EXE installer](https://github.com/miketam/harbor-ssh/releases/download/v0.4.3/harbor-ssh-0.4.3-win-x64-setup.exe) | No native Windows ARM64 installer |
+| Apple M-series Mac (Apple Silicon) | [arm64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.6/harbor-ssh-0.4.6-mac-arm64.dmg) | [arm64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.6/harbor-ssh-0.4.6-mac-arm64.zip) |
+| Intel Mac | [x64 DMG](https://github.com/miketam/harbor-ssh/releases/download/v0.4.6/harbor-ssh-0.4.6-mac-x64.dmg) | [x64 ZIP](https://github.com/miketam/harbor-ssh/releases/download/v0.4.6/harbor-ssh-0.4.6-mac-x64.zip) |
+| Windows x64 (Intel / AMD) | [EXE installer](https://github.com/miketam/harbor-ssh/releases/download/v0.4.6/harbor-ssh-0.4.6-win-x64-setup.exe) | No native Windows ARM64 installer |
 
 On a Mac, open **Apple menu > About This Mac**: choose arm64 for an Apple M-series chip, or x64 for an Intel processor. macOS 13 or later is required. On Windows, check **Settings > System > About > System type**.
 
@@ -60,13 +60,13 @@ Download `SHA256SUMS` and compare the calculated SHA-256 with the entry for your
 macOS (replace arm64 with x64 for Intel):
 
 ```bash
-shasum -a 256 harbor-ssh-0.4.3-mac-arm64.dmg
+shasum -a 256 harbor-ssh-0.4.6-mac-arm64.dmg
 ```
 
 Windows PowerShell:
 
 ```powershell
-Get-FileHash .\harbor-ssh-0.4.3-win-x64-setup.exe -Algorithm SHA256
+Get-FileHash .\harbor-ssh-0.4.6-win-x64-setup.exe -Algorithm SHA256
 ```
 
 A matching checksum confirms that the file matches the release asset; it is not a security certification.
